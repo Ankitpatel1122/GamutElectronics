@@ -1,10 +1,18 @@
-# Use an official Nginx image to serve the static website
-# Use the official Apache image from the Docker Hub
+# Use the official Apache image from Docker Hub
 FROM httpd:2.4
 
-# Copy your static website files to the Apache document root
-COPY ./public-html/ /usr/local/apache2/htdocs/
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Expose port 80 to the outside world
+# Clone the GitHub repository
+RUN git clone https://github.com/VSNINT/GamutElectronics.git /usr/local/apache2/htdocs/
+
+# Set the document root directory to the cloned repo's content
+WORKDIR /usr/local/apache2/htdocs
+
+# Expose port 80 for the HTTP server
 EXPOSE 80
+
 
